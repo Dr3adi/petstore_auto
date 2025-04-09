@@ -2,5 +2,5 @@ from pydantic import BaseModel
 
 
 class Category(BaseModel):
-    id: int
-    name: str
+    id: int = None
+    name: str = None

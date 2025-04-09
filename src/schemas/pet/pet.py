@@ -6,9 +6,9 @@ from src.schemas.pet.category import Category
 
 
 class Pet(BaseModel):
-    id: int
+    id: int = None
     category: Category = None
-    name: str
-    photoUrls: List[str]
+    name: str = None
+    photoUrls: List[str] = None
     tags: List[Tag] = None
     status: Statuses = None

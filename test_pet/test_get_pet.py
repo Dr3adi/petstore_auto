@@ -16,6 +16,5 @@ def test_get_pet():
 
 @pytest.mark.parametrize('status', ['available', 'pending', 'sold'])
 def test_pet_find_by_status(status):
-    query = {'status': f'{status}'}
-    response = api_client.sed_request('GET', '/v2/pet/findByStatus', params=query)
+    response = api_client.sed_request('GET', '/v2/pet/findByStatus', params={'status': f'{status}'})
     response.assert_status_code(200).validate(Pet)
