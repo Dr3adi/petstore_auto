@@ -7,7 +7,7 @@ class ApiClient:
         self.base_url = base_url
 
 
-    def sed_request(self, method, endpoint, **kwargs):
+    def send_request(self, method, endpoint, **kwargs):
         url = f'{self.base_url}{endpoint}'
         response = requests.request(method, url, **kwargs)
         return Response(response)
