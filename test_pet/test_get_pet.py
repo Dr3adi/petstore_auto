@@ -20,14 +20,10 @@ def test_pet_find_by_status(status):
     response.assert_status_code(200).validate(Pet)
 
 
-def test_create_pet():
-    body = {"id": 357,
-            "category": {"id": 10, "name": "frog"},
-            "name": "doggie",
-            "photoUrls": ["string"],
-            "tags": [{"id": 0, "name": "string"}],
-            "status": "available"}
+@pytest.mark.parametrize('status', ['available', 'pending', 'sold'])
+def test_create_pet(get_pet_generator, status):
+    body = get_pet_generator.pet_status(status).pet_name().pet_photo_urls().build_pet()
     response = api_client.send_request('POST', '/v2/pet', json=body)
-    # data = response.response_json['id']
+    data = response.response_json
     response.assert_status_code(200).validate(Pet)
-    # print(data)
+    print(data)
