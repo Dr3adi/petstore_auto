@@ -1,12 +1,13 @@
 from faker import Faker
 from src.generators.generate_category import GenerateCategory
 from src.generators.generate_tag import GenerateTag
+import random
 
 
 class GeneratePet:
 
     def __init__(self):
-        self.result = {'id': 56}
+        self.result = {'id': random.randint(100, 200)}
         self.reset()
 
 
