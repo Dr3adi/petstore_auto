@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from src.enums.pet_enums import Statuses
 from pydantic.types import List
 from src.schemas.pet.tag import Tag
@@ -12,3 +12,13 @@ class Pet(BaseModel):
     photoUrls: List[str] = None
     tags: List[Tag] = None
     status: Statuses = None
+
+
+    @field_validator('status', mode='before')
+    def validate_status(cls, value):
+        if isinstance(value, Statuses):
+            value = value.value
+        status_list = [status.value for status in Statuses]
+        if value not in status_list:
+            raise ValueError(f'Неверный статус {value}')
+        return value
