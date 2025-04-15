@@ -4,6 +4,7 @@ from pydantic.types import List
 from src.schemas.pet.tag import Tag
 from src.schemas.pet.category import Category
 from typing import Optional, List
+from src.enums.global_emums import GlobalErrorMessanges
 
 
 class Pet(BaseModel):
@@ -21,5 +22,5 @@ class Pet(BaseModel):
             value = value.value
         status_list = [status.value for status in Statuses]
         if value not in status_list:
-            raise ValueError(f'Неверный статус {value}')
+            raise ValueError(f'{GlobalErrorMessanges.WRONG_STATUS.value}, был получен статус: {value}')
         return value

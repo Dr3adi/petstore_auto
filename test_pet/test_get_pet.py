@@ -18,7 +18,7 @@ def test_get_pet():
 @pytest.mark.parametrize('status', [status.value for status in Statuses])
 def test_pet_find_by_status(status):
     response = api_client.send_request('GET', '/v2/pet/findByStatus', params={'status': status})
-    response.assert_status_code(200).validate(Pet)
+    response.assert_status_code(200).assert_status(status).validate(Pet)
 
 
 @pytest.mark.parametrize('status', [status.value for status in Statuses])

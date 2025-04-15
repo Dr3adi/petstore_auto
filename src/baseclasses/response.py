@@ -15,6 +15,13 @@ class Response:
         return self
 
 
+    def assert_status(self, status):
+        if isinstance(self.response_json, list):
+            for item in self.response_json:
+                assert item['status'] == status, f'{GlobalErrorMessanges.WRONG_STATUS.value} {status}'
+        return self
+
+
     def validate(self, schema):
         if isinstance(self.response_json, list):
             for item in self.response_json:
