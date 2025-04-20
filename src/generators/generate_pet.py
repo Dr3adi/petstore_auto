@@ -11,7 +11,7 @@ class GeneratePet:
         self.reset()
 
 
-    def pet_name(self, name='Trump'):
+    def pet_name(self, name='newAnimal'):
         self.result['name'] = name
         return self
 
@@ -24,6 +24,16 @@ class GeneratePet:
 
     def pet_status(self, status='sold'):
         self.result['status'] = status
+        return self
+
+
+    def pet_category(self, category):
+        self.result['category'] = category
+        return self
+
+
+    def pet_tags(self, tags):
+        self.result['tags'] = tags
         return self
 
 

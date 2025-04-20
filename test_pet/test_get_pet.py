@@ -23,7 +23,13 @@ def test_pet_find_by_status(status):
 
 @pytest.mark.parametrize('status', [status.value for status in Statuses])
 def test_create_pet(get_pet_generator, status):
-    body = get_pet_generator.pet_status(status).pet_name().pet_photo_urls().build_pet()
+    body = (get_pet_generator
+            .pet_status(status)
+            # .pet_category({"id": 1, "name": "NewCategory"})
+            # .pet_tags([{"id": 10, "name": "NewTag"}, {"id": 11, "name": "ExtraTag"}])
+            .pet_name()
+            .pet_photo_urls()
+            .build_pet())
     response = api_client.send_request('POST', '/v2/pet', json=body)
     data = response.response_json
     response.assert_status_code(200).validate(Pet)
