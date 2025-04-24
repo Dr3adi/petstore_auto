@@ -11,8 +11,9 @@ class GeneratePet:
         self.reset()
 
 
-    def pet_name(self, name='newAnimal'):
-        self.result['name'] = name
+    def pet_name(self):
+        fake = Faker()
+        self.result['name'] = fake.first_name()
         return self
 
 
