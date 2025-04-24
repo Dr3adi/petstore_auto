@@ -27,10 +27,16 @@ def test_create_pet(get_pet_generator, status):
             .pet_status(status)
             # .pet_category({"id": 1, "name": "NewCategory"})
             # .pet_tags([{"id": 10, "name": "NewTag"}, {"id": 11, "name": "ExtraTag"}])
-            .pet_name()
             .pet_photo_urls()
             .build_pet())
     response = api_client.send_request('POST', '/v2/pet', json=body)
     data = response.response_json
     response.assert_status_code(200).validate(Pet)
     print(data)
+
+
+def test_update_pet(create_pet):
+    pet = create_pet
+    pet['name'] = 'newName'
+    response = api_client.send_request('PUT', '/v2/pet', json=pet)
+    response.assert_status_code(200).validate(Pet)
