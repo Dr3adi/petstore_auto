@@ -10,15 +10,16 @@ from src.enums.pet_enums import Statuses
 api_client = ApiClient(BASE_URL)
 
 
-def test_get_pet():
-    response = api_client.send_request('GET', '/v2/pet/1')
+def test_get_pet(create_pet):
+    petId = create_pet['id']
+    response = api_client.send_request('GET', f'/v2/pet/{petId}')
     response.assert_status_code(200).validate(Pet)
 
 
 @pytest.mark.parametrize('status', [status.value for status in Statuses])
 def test_pet_find_by_status(status):
     response = api_client.send_request('GET', '/v2/pet/findByStatus', params={'status': status})
-    response.assert_status_code(200).assert_status(status).validate(Pet)
+    response.assert_status_code(200).assert_value('status', status).validate(Pet)
 
 
 @pytest.mark.parametrize('status', [status.value for status in Statuses])
@@ -31,7 +32,7 @@ def test_create_pet(get_pet_generator, status):
             .build_pet())
     response = api_client.send_request('POST', '/v2/pet', json=body)
     data = response.response_json
-    response.assert_status_code(200).validate(Pet)
+    response.assert_status_code(200).validate(Pet).assert_value('status', status)
     print(data)
 
 
@@ -40,3 +41,9 @@ def test_update_pet(create_pet):
     pet['name'] = 'newName'
     response = api_client.send_request('PUT', '/v2/pet', json=pet)
     response.assert_status_code(200).validate(Pet)
+
+
+def test_delete_pet(create_pet):
+    petId = create_pet['id']
+    response = api_client.send_request('DELETE', f'/v2/pet/{petId}')
+    response.assert_status_code(200)
