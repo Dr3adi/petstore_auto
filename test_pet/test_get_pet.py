@@ -5,15 +5,21 @@ from config import BASE_URL
 from src.baseclasses.api_client import ApiClient
 from src.schemas.pet.pet import Pet
 from src.enums.pet_enums import Statuses
+import allure
 
 
 api_client = ApiClient(BASE_URL)
 
-
+@allure.title('Получение питомца по id')
 def test_get_pet(create_pet):
-    petId = create_pet['id']
-    response = api_client.send_request('GET', f'/v2/pet/{petId}')
-    response.assert_status_code(200).validate(Pet)
+    with allure.step('Получение id'):
+        petId = create_pet['id']
+    with allure.step('Отправка GET-запроса с полученным id'):
+        response = api_client.send_request('GET', f'/v2/pet/{petId}')
+    with allure.step('Проверка статус-кода'):
+        response.assert_status_code(200)
+    with allure.step('Валидация json-схемы'):
+        response.validate(Pet)
 
 
 @pytest.mark.parametrize('status', [status.value for status in Statuses])

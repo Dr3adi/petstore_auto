@@ -1,3 +1,4 @@
+import allure
 import requests
 from src.enums.global_emums import GlobalErrorMessanges
 
@@ -11,8 +12,9 @@ class Response:
 
 
     def assert_status_code(self, status_code):
-        assert status_code == self.response_status, f'{GlobalErrorMessanges.WRONG_STATUS_CODE.value} {status_code} != {self.response_status}'
-        return self
+        with allure.step('Проверка статус-кода'):
+            assert status_code == self.response_status, f'{GlobalErrorMessanges.WRONG_STATUS_CODE.value} {status_code} != {self.response_status}'
+            return self
 
 
     # def assert_status(self, status):
@@ -23,22 +25,27 @@ class Response:
 
 
     def validate(self, schema):
-        if isinstance(self.response_json, list):
-            for item in self.response_json:
-                parsed_object = schema.model_validate(item)
-                self.parsed_object = parsed_object
-        else:
-            parsed_object = schema.model_validate(self.response_json)
-            self.parsed_object = parsed_object
-        return self
+        with allure.step('Проверка соответсвия'):
+            try:
+                if isinstance(self.response_json, list):
+                    for item in self.response_json:
+                        parsed_object = schema.model_validate(item)
+                        self.parsed_object = parsed_object
+                else:
+                    parsed_object = schema.model_validate(self.response_json)
+                    self.parsed_object = parsed_object
+                return self
+            except ValueError as e:
+                raise ValueError(f'Ошибка валидации {e}')
 
 
     def assert_value(self, key, value):
-        if isinstance(self.response_json,list):
-            for item in self.response_json:
-                get_item = item[key]
-                assert item[key] == value, f'{key} != {value} был получен {get_item}'
-        else:
-            get_item = self.response_json[key]
-            assert self.response_json[key] == value, f'{key} != {value} был получен {get_item}'
-        return self
+        with allure.step('Проверка данных'):
+            if isinstance(self.response_json,list):
+                for item in self.response_json:
+                    get_item = item[key]
+                    assert item[key] == value, f'{key} != {value} был получен {get_item}'
+            else:
+                get_item = self.response_json[key]
+                assert self.response_json[key] == value, f'{key} != {value} был получен {get_item}'
+            return self
